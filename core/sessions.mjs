@@ -8,6 +8,10 @@ import { killWindow, listWindows } from './tmux.mjs'
 
 // Pure join of live tmux windows with their enrichment records (no I/O, so it's
 // unit-testable). Returns the panel-facing session list, most-recent first.
+/**
+ * @param {import('./types.mjs').TmuxWindow[]} windows
+ * @param {Record<string, import('./types.mjs').SessionRecord>} records
+ */
 export function joinSessions(windows, records) {
   const sessions = windows.map((w) => {
     const rec = (w.rcId && records[w.rcId]) || null

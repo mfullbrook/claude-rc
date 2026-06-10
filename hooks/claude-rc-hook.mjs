@@ -33,6 +33,7 @@ async function main() {
   const event = payload.hook_event_name || ''
   const now = Math.floor(Date.now() / 1000)
 
+  /** @type {Partial<import('../core/types.mjs').SessionRecord>} */
   const patch = { rcId, updatedAt: now }
   if (process.env.CLAUDE_RC_NAME) patch.rcName = process.env.CLAUDE_RC_NAME
   if (payload.session_id) patch.claudeSessionId = payload.session_id

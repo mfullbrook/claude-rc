@@ -1,0 +1,24 @@
+{
+  "//": "Typechecks the build-free plain-JS world (CLI, core, hook, tests) via checkJs + JSDoc. The Nuxt app/server is typechecked separately by `nuxt typecheck`.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": [
+    "core/**/*.mjs",
+    "src/**/*.mjs",
+    "bin/**/*.mjs",
+    "hooks/**/*.mjs",
+    "test/**/*.mjs"
+  ],
+  "exclude": ["node_modules", ".nuxt", ".output", "dist"]
+}

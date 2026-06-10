@@ -1,6 +1,10 @@
 // Build the one-time bootstrap URL a device opens to authorise itself: opening
 // it with a correct ?token= sets the SameSite cookie (see server/middleware/auth.ts).
 // Pure + testable.
+/**
+ * @param {{ scheme?: string, host?: string, port?: number, baseUrl?: string, token?: string }} [opts]
+ * @returns {string}
+ */
 export function buildBootstrapUrl({
   scheme = 'http',
   host = '127.0.0.1',

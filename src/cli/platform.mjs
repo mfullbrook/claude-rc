@@ -127,6 +127,7 @@ export async function statusSystemd() {
   }
 }
 
+/** @returns {[string, string[]]} */
 export function logsCommandSystemd() {
   return ['journalctl', ['--user', '-u', UNIT, '-n', '60', '--no-pager', '-f']]
 }
@@ -214,6 +215,7 @@ export async function statusLaunchd() {
   }
 }
 
+/** @returns {[string, string[]]} */
 export function logsCommandLaunchd() {
   return ['tail', ['-n', '60', '-f', launchdLogPath()]]
 }
@@ -242,6 +244,7 @@ export async function serviceStatus() {
   if (PLATFORM === 'darwin') return statusLaunchd()
   return 'unknown'
 }
+/** @returns {[string, string[]] | null} */
 export function logsCommand() {
   if (PLATFORM === 'linux') return logsCommandSystemd()
   if (PLATFORM === 'darwin') return logsCommandLaunchd()

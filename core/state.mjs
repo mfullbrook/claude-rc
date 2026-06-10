@@ -27,6 +27,10 @@ export async function readSessionRecord(rcId) {
   }
 }
 
+/**
+ * @param {string} rcId
+ * @param {Partial<import('./types.mjs').SessionRecord>} patch
+ */
 export async function writeSessionRecord(rcId, patch) {
   await ensureStateDirs()
   const file = fileFor(rcId)

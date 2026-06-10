@@ -42,6 +42,10 @@ export async function ensureSession(session, home) {
 }
 
 // Pure parser for `tmux list-windows -F <FORMAT>` output (exported for tests).
+/**
+ * @param {string} stdout
+ * @returns {import('./types.mjs').TmuxWindow[]}
+ */
 export function parseWindowList(stdout) {
   const rows = []
   for (const line of String(stdout).split('\n')) {

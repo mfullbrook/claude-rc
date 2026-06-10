@@ -67,6 +67,9 @@ function windowPath() {
   return [...new Set([...stable, ...fromEnv])].join(path.delimiter)
 }
 
+/**
+ * @param {{ name?: string, dir?: string, dryRun?: boolean }} [opts]
+ */
 export async function launchSession({ name, dir, dryRun = false } = {}) {
   name = (name || '').trim()
   if (!name) throw new Error('name is required')
