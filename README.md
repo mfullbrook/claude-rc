@@ -1,15 +1,24 @@
 # claude-rc
 
-**Launch, manage and watch [Claude Code](https://www.claude.com/product/claude-code) Remote Control sessions from your phone — over your own Tailscale network.**
+**Start Claude Code sessions on your always-on machines and drive them from your phone — through Claude's own app, not a flaky bot, a browser terminal, or an SSH session.**
 
 > **Unofficial.** claude-rc is a community tool. It is **not affiliated with, endorsed by, or supported by Anthropic.** It drives Claude Code's own `--remote-control` feature; it does not proxy your account, tokens, or login.
 
 ---
 
+The hard part of remote coding isn't the chat — Anthropic already built an excellent mobile app
+for that. The hard part is *starting and managing the sessions* on a machine that's just sitting
+there. So that's all claude-rc does, and then it gets out of the way.
+
 `claude-rc new my-feature ~/projects/app` starts a `claude --remote-control` session in a tmux
-window on your dev box. The session shows up in the **Claude app's Code tab** on your phone,
-reached through Anthropic's own relay. claude-rc gives you a tiny web panel — and a CLI — to
-spin those sessions up, see what they're doing, and kill them, from anywhere on your tailnet.
+window on the machine, kept alive by an always-on service. The session appears in the **Claude
+app's Code tab** on your phone, reached through Anthropic's own relay — so you get push, real chat,
+and conversation sync for free. A tiny web panel (and a CLI) let you spin sessions up, see what
+they're doing, and kill them, from anywhere on your tailnet.
+
+**Why a daemon?** Because the durable value is the always-on bit. claude-rc runs as a per-machine
+service, so you can start work on an idle box from your phone without being at the keyboard — the
+one thing the Claude app and CLI don't do for you.
 
 ```
 ┌──────────────┐    tailnet     ┌────────────────────┐   spawns   ┌──────────────────────┐
@@ -24,14 +33,19 @@ spin those sessions up, see what they're doing, and kill them, from anywhere on 
 
 ## Why this, and not a terminal streamer
 
-Other Claude-Code-in-tmux tools (cld-tmux, claunch, Codeman, …) either stop at the CLI or
-**re-invent remote access** — streaming the terminal to your browser over xterm.js/PTY, which
-means they have to solve auth, rendering and input lag themselves.
+Every other way to drive an agent from your phone re-invents the *channel* and ships something
+worse: a Telegram bridge that breaks and de-syncs, an xterm.js terminal wedged into a browser, or
+an SSH session dying inside an iOS app. claude-rc refuses to play that game. It rides Claude Code's
+**native** Remote Control relay, so the official Claude app *is* the channel — chat, push
+notifications, conversation sync, all first-party. claude-rc is just a thin launcher + dashboard +
+a tailnet front door.
 
-claude-rc deliberately does **none** of that. It rides Claude Code's **native** Remote Control
-relay, so the official Claude app provides the real mobile UX — chat, push notifications,
-conversation sync. claude-rc is just a thin launcher + dashboard + a tailnet front door.
-**Terminal streaming is permanently out of scope.**
+The other tmux wrappers (cld-tmux, claunch) stop at the CLI and never touch `--remote-control`;
+Codeman streams the terminal itself over a PTY. **Terminal streaming is permanently out of scope
+here** — that's the whole point.
+
+**Bonus:** because the panel rides `tailscale serve` (not SSH), you can start sessions on a machine
+you've deliberately kept SSH *off* — from your phone, without being there.
 
 ## Prerequisites
 
