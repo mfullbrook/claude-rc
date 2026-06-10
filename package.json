@@ -1,0 +1,35 @@
+{
+  "name": "claude-rc",
+  "version": "0.0.0",
+  "description": "Unofficial remote-control panel for Claude Code sessions. Launch, manage and observe `claude --remote-control` sessions from your phone over your tailnet.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "claude-rc": "bin/claude-rc.mjs"
+  },
+  "files": [
+    "bin",
+    "core",
+    "src",
+    "hooks",
+    ".output",
+    "nuxt.config.ts"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "prepare": "nuxt prepare",
+    "preview": "node .output/server/index.mjs",
+    "serve": "node bin/claude-rc.mjs serve",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.8.2",
+    "nuxt": "^4.4.8"
+  }
+}
