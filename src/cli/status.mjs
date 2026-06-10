@@ -7,8 +7,9 @@ export async function run() {
   const cfg = loadConfig()
   const ok = st === 'active' || st === 'loaded'
   const unit = PLATFORM === 'darwin' ? LABEL : UNIT
+  const boot = cfg.token ? `/?token=${cfg.token}` : '/'
   console.log(`${ok ? green('●') : red('○')} service: ${st} ${dim(`(${unit})`)}`)
-  console.log(dim(`  panel:  http://${cfg.bind}:${cfg.port}   base ${cfg.baseUrl}`))
+  console.log(dim(`  panel:  http://${cfg.bind}:${cfg.port}${boot}   base ${cfg.baseUrl}`))
   console.log(dim(`  tmux:   ${cfg.tmuxSession}`))
   if (!isBuilt()) console.log(`${yellow('⚠')} panel build missing — run \`npm run build\``)
 }

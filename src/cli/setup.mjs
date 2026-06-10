@@ -61,9 +61,11 @@ export async function run(args) {
 
   // 6. Next steps
   const cfg = loadConfig()
+  const boot = cfg.token ? `/?token=${cfg.token}` : '/'
   console.log('')
   console.log(bold('Next'))
-  console.log(`  • Panel:    ${dim(`http://${cfg.bind}:${cfg.port}`)}`)
-  console.log(`  • Expose:   ${dim('claude-rc expose')}   ${dim('# tailnet-only, via tailscale serve')}`)
-  console.log(`  • Launch:   ${dim('claude-rc new my-feature ~/projects/app')}`)
+  console.log(`  • Open once to authorise this browser:`)
+  console.log(`      ${dim(`http://${cfg.bind}:${cfg.port}${boot}`)}`)
+  console.log(`  • Expose on your tailnet:  ${dim('claude-rc expose')}   ${dim('# tailnet-only')}`)
+  console.log(`  • Launch a session:        ${dim('claude-rc new my-feature ~/projects/app')}`)
 }
