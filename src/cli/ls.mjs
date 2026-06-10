@@ -1,5 +1,5 @@
 import { listSessions } from '../../core/sessions.mjs'
-import { homeShort, timeAgo, truncate, green, dim, bold } from './util.mjs'
+import { bold, dim, green, homeShort, timeAgo, truncate } from './util.mjs'
 
 export async function run() {
   const { sessions } = await listSessions()
@@ -14,9 +14,12 @@ export async function run() {
     const bits = []
     const when = e?.updatedAt || s.activity
     if (when) bits.push(timeAgo(when))
-    if (e?.messageCount != null) bits.push(`${e.messageCount} msg${e.messageCount === 1 ? '' : 's'}`)
-    const meta = bits.length ? dim('  ' + bits.join(' · ')) : ''
-    console.log(`${dot} ${bold(pad(s.name, 18))} ${dim(pad(homeShort(s.dir), 28))} ${status}${meta}`)
+    if (e?.messageCount != null)
+      bits.push(`${e.messageCount} msg${e.messageCount === 1 ? '' : 's'}`)
+    const meta = bits.length ? dim(`  ${bits.join(' · ')}`) : ''
+    console.log(
+      `${dot} ${bold(pad(s.name, 18))} ${dim(pad(homeShort(s.dir), 28))} ${status}${meta}`,
+    )
     if (e?.lastMessage) console.log(dim(`    ${truncate(e.lastMessage, 72)}`))
   }
 }

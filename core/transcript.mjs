@@ -17,7 +17,7 @@ function extractText(content) {
 
 function clip(s, n) {
   const c = String(s).replace(/\s+/g, ' ').trim()
-  return c.length > n ? c.slice(0, n - 1) + '…' : c
+  return c.length > n ? `${c.slice(0, n - 1)}…` : c
 }
 
 export function parseTranscript(transcriptPath, { snippet = 280 } = {}) {

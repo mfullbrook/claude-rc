@@ -3,9 +3,10 @@
 // Precedence: explicit env var > config file > built-in default. The config
 // file (written by `claude-rc setup`) lives at $XDG_CONFIG_HOME/claude-rc/
 // config.json and holds the generated auth token, port, etc.
+
+import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import fs from 'node:fs'
 
 export const HOME = os.homedir()
 

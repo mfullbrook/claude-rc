@@ -1,6 +1,6 @@
-import { serviceStatus, PLATFORM, UNIT, LABEL, isBuilt } from './platform.mjs'
 import { loadConfig } from '../../core/config.mjs'
-import { green, red, yellow, dim } from './util.mjs'
+import { isBuilt, LABEL, PLATFORM, serviceStatus, UNIT } from './platform.mjs'
+import { dim, green, red, yellow } from './util.mjs'
 
 export async function run() {
   const st = await serviceStatus()

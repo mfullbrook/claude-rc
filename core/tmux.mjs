@@ -8,9 +8,7 @@ const TMUX = process.env.CLAUDE_RC_TMUX_BIN || 'tmux'
 
 // Shells we treat as "idle": the window has dropped back to a prompt because
 // the claude session ended. Anything else running => "running".
-const IDLE_COMMANDS = new Set([
-  'zsh', '-zsh', 'bash', '-bash', 'sh', '-sh', 'fish', '-fish',
-])
+const IDLE_COMMANDS = new Set(['zsh', '-zsh', 'bash', '-bash', 'sh', '-sh', 'fish', '-fish'])
 const PLACEHOLDER_WINDOW = '__home'
 
 const FIELDS = [
@@ -30,7 +28,7 @@ export async function tmux(args, opts = {}) {
 
 export async function hasSession(session) {
   try {
-    await tmux(['has-session', '-t', '=' + session])
+    await tmux(['has-session', '-t', `=${session}`])
     return true
   } catch {
     return false
@@ -43,16 +41,10 @@ export async function ensureSession(session, home) {
   }
 }
 
-export async function listWindows(session) {
-  let out
-  try {
-    out = await tmux(['list-windows', '-t', '=' + session, '-F', FORMAT])
-  } catch {
-    // No such session yet just means nothing is running.
-    return []
-  }
+// Pure parser for `tmux list-windows -F <FORMAT>` output (exported for tests).
+export function parseWindowList(stdout) {
   const rows = []
-  for (const line of out.stdout.split('\n')) {
+  for (const line of String(stdout).split('\n')) {
     if (!line) continue
     const p = line.split('\t')
     if (p.length < 5) continue
@@ -72,12 +64,34 @@ export async function listWindows(session) {
   return rows
 }
 
+export async function listWindows(session) {
+  let out
+  try {
+    out = await tmux(['list-windows', '-t', `=${session}`, '-F', FORMAT])
+  } catch {
+    // No such session yet just means nothing is running.
+    return []
+  }
+  return parseWindowList(out.stdout)
+}
+
 export async function setWindowOption(target, key, value) {
   await tmux(['set-option', '-w', '-t', target, key, value])
 }
 
 export async function newWindow(session, { name, dir, env = {}, command }) {
-  const args = ['new-window', '-P', '-F', '#{window_id}', '-t', '=' + session, '-n', name, '-c', dir]
+  const args = [
+    'new-window',
+    '-P',
+    '-F',
+    '#{window_id}',
+    '-t',
+    `=${session}`,
+    '-n',
+    name,
+    '-c',
+    dir,
+  ]
   for (const [k, v] of Object.entries(env)) {
     args.push('-e', `${k}=${v}`)
   }

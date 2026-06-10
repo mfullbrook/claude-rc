@@ -1,8 +1,8 @@
 import { loadConfig } from '../../core/config.mjs'
-import { readStore, writeStore, newToken } from './configstore.mjs'
-import { installService, isBuilt, serverEntry, PLATFORM } from './platform.mjs'
+import { newToken, readStore, writeStore } from './configstore.mjs'
 import { installClaudeHooks } from './hooks.mjs'
-import { which, green, yellow, red, dim, bold } from './util.mjs'
+import { installService, isBuilt, PLATFORM, serverEntry } from './platform.mjs'
+import { bold, dim, green, red, which, yellow } from './util.mjs'
 
 export async function run(args) {
   const noHooks = args.includes('--no-hooks')
@@ -11,14 +11,17 @@ export async function run(args) {
   // 1. Prerequisites
   const tmux = which('tmux')
   if (!tmux) {
-    console.log(red('✗') + ' tmux not found — install it first (apt install tmux / brew install tmux)')
+    console.log(
+      `${red('✗')} tmux not found — install it first (apt install tmux / brew install tmux)`,
+    )
     process.exitCode = 1
     return
   }
   console.log(`${green('✓')} tmux ${dim(tmux)}`)
   const claude = which('claude')
   if (claude) console.log(`${green('✓')} claude ${dim(claude)}`)
-  else console.log(`${yellow('⚠')} claude not on PATH — install Claude Code before launching sessions`)
+  else
+    console.log(`${yellow('⚠')} claude not on PATH — install Claude Code before launching sessions`)
 
   // 2. Config + token (generated once, then preserved)
   const store = await readStore()
@@ -30,7 +33,9 @@ export async function run(args) {
   }
   if (!store.token) patch.token = newToken()
   await writeStore(patch)
-  console.log(`${green('✓')} config written ${dim(`(token ${store.token ? 'kept' : 'generated'})`)}`)
+  console.log(
+    `${green('✓')} config written ${dim(`(token ${store.token ? 'kept' : 'generated'})`)}`,
+  )
 
   // 3. Build present?
   if (!isBuilt()) {
@@ -53,7 +58,9 @@ export async function run(args) {
   } else {
     try {
       const r = await installClaudeHooks()
-      console.log(`${green('✓')} Claude Code hooks installed ${dim(`(${r.added} added, ${r.events.length} events)`)}`)
+      console.log(
+        `${green('✓')} Claude Code hooks installed ${dim(`(${r.added} added, ${r.events.length} events)`)}`,
+      )
     } catch (e) {
       console.log(`${red('✗')} hook install failed: ${e.message}`)
     }

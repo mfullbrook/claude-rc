@@ -1,7 +1,8 @@
 // Tiny terminal helpers — no dependencies. Colour only when stdout is a TTY.
-import process from 'node:process'
-import path from 'node:path'
+
 import { existsSync } from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
 
 // Minimal cross-platform `which`: first match on PATH.
 export function which(bin) {
@@ -45,12 +46,12 @@ export function timeAgo(epoch) {
 
 export function homeShort(p) {
   const home = process.env.HOME || ''
-  return home && p.startsWith(home) ? '~' + p.slice(home.length) : p
+  return home && p.startsWith(home) ? `~${p.slice(home.length)}` : p
 }
 
 export function truncate(s, n) {
   const clean = String(s).replace(/\s+/g, ' ').trim()
-  return clean.length > n ? clean.slice(0, n - 1) + '…' : clean
+  return clean.length > n ? `${clean.slice(0, n - 1)}…` : clean
 }
 
 export function fail(msg) {

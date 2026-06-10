@@ -65,7 +65,7 @@ export async function readAllSessionRecords() {
       .map(async (n) => {
         try {
           const rec = JSON.parse(await fsp.readFile(path.join(sessionsDir(), n), 'utf8'))
-          if (rec && rec.rcId) records[rec.rcId] = rec
+          if (rec?.rcId) records[rec.rcId] = rec
         } catch {
           // skip unreadable / partial files
         }

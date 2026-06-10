@@ -1,5 +1,5 @@
 import { listSessions, renameSession } from '../../core/sessions.mjs'
-import { green, fail } from './util.mjs'
+import { fail, green } from './util.mjs'
 
 export async function run(args) {
   const [target, ...rest] = args

@@ -2,8 +2,8 @@ import { spawn } from 'node:child_process'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { loadConfig, isLoopback } from '../../core/config.mjs'
-import { fail, dim } from './util.mjs'
+import { isLoopback, loadConfig } from '../../core/config.mjs'
+import { dim, fail } from './util.mjs'
 
 // Package root = two levels up from src/cli/serve.mjs.
 function packageRoot() {
@@ -42,7 +42,9 @@ export async function run() {
   }
 
   const boot = cfg.token ? `/?token=${cfg.token}` : '/'
-  console.log(dim(`claude-rc serve → http://${cfg.bind}:${cfg.port}${boot}  (tmux '${cfg.tmuxSession}')`))
+  console.log(
+    dim(`claude-rc serve → http://${cfg.bind}:${cfg.port}${boot}  (tmux '${cfg.tmuxSession}')`),
+  )
   const child = spawn(process.execPath, [entry], { env, stdio: 'inherit' })
   child.on('exit', (code) => process.exit(code ?? 0))
 }

@@ -1,5 +1,5 @@
 import { launchSession } from '../../core/launch.mjs'
-import { homeShort, green, dim, fail } from './util.mjs'
+import { dim, fail, green, homeShort } from './util.mjs'
 
 export async function run(args) {
   let dryRun = false

@@ -1,9 +1,10 @@
 // Install/remove the claude-rc hook in the user's Claude Code settings,
 // idempotently and without clobbering other hooks. Our entries are identified
 // by the hook script filename in their command.
+
+import fsp from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import fsp from 'node:fs/promises'
 import { hookPath } from './platform.mjs'
 
 const EVENTS = ['SessionStart', 'UserPromptSubmit', 'Stop', 'SessionEnd']
@@ -32,7 +33,7 @@ async function readSettings() {
 async function writeSettings(obj) {
   const p = claudeSettingsPath()
   await fsp.mkdir(path.dirname(p), { recursive: true })
-  await fsp.writeFile(p, JSON.stringify(obj, null, 2) + '\n')
+  await fsp.writeFile(p, `${JSON.stringify(obj, null, 2)}\n`)
 }
 
 export async function installClaudeHooks() {

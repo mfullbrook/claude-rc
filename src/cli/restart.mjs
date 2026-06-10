@@ -1,5 +1,5 @@
 import { restartService } from './platform.mjs'
-import { green, fail } from './util.mjs'
+import { fail, green } from './util.mjs'
 
 export async function run() {
   try {

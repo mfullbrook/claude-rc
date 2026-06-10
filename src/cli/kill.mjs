@@ -1,6 +1,6 @@
-import { listSessions, killSession } from '../../core/sessions.mjs'
+import { killSession, listSessions } from '../../core/sessions.mjs'
 import { isValidWindowId } from '../../core/tmux.mjs'
-import { green, fail } from './util.mjs'
+import { fail, green } from './util.mjs'
 
 export async function run(args) {
   const target = args[0]
@@ -19,7 +19,10 @@ export async function run(args) {
     )
     if (matches.length === 0) return fail(`no session matching '${target}'`)
     if (matches.length > 1) {
-      return fail(`'${target}' matches ${matches.length} sessions — kill by id: ` + matches.map((m) => m.id).join(' '))
+      return fail(
+        `'${target}' matches ${matches.length} sessions — kill by id: ` +
+          matches.map((m) => m.id).join(' '),
+      )
     }
     windowId = matches[0].id
   }

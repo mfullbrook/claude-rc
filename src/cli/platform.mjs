@@ -2,12 +2,13 @@
 // as a systemd --user unit (Linux) or a launchd LaunchAgent (macOS). The
 // generators are pure (easy to test); the install/uninstall calls touch the
 // system.
+
+import { execFile } from 'node:child_process'
+import { existsSync } from 'node:fs'
+import fsp from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import fsp from 'node:fs/promises'
-import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 
 const pexec = promisify(execFile)

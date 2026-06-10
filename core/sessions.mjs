@@ -2,9 +2,10 @@
 //   - tmux windows  -> authoritative for "what is alive" (and running/idle)
 //   - state records -> enrichment written by the launcher + the Claude hook
 // They are joined on the rcId stamped onto each window as a user-option.
-import { listWindows, killWindow } from './tmux.mjs'
-import { readAllSessionRecords, writeSessionRecord } from './state.mjs'
+
 import { loadConfig } from './config.mjs'
+import { readAllSessionRecords, writeSessionRecord } from './state.mjs'
+import { killWindow, listWindows } from './tmux.mjs'
 
 export async function listSessions() {
   const cfg = loadConfig()
@@ -60,7 +61,10 @@ export async function killSession(windowId) {
   const rcId = await rcIdForWindow(windowId)
   await killWindow(windowId)
   if (rcId) {
-    await writeSessionRecord(rcId, { status: 'ended', endedAt: Math.floor(Date.now() / 1000) }).catch(() => {})
+    await writeSessionRecord(rcId, {
+      status: 'ended',
+      endedAt: Math.floor(Date.now() / 1000),
+    }).catch(() => {})
   }
   return { rcId }
 }

@@ -1,12 +1,13 @@
 // Launch a named `claude --remote-control` session in its own tmux window.
 // This is the Node port of the original `newclaude` script, plus rcId tagging
 // for enrichment correlation.
+
+import { randomUUID } from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
-import { randomUUID } from 'node:crypto'
-import { ensureSession, listWindows, newWindow, setWindowOption } from './tmux.mjs'
-import { loadConfig, HOME } from './config.mjs'
+import { HOME, loadConfig } from './config.mjs'
 import { writeSessionRecord } from './state.mjs'
+import { ensureSession, listWindows, newWindow, setWindowOption } from './tmux.mjs'
 
 function shellQuote(value) {
   return `'${String(value).replace(/'/g, `'\\''`)}'`
@@ -110,5 +111,12 @@ export async function launchSession({ name, dir, dryRun = false } = {}) {
     status: 'active',
   })
 
-  return { rcId, name: appName, windowName: winName, windowId, dir: target, session: cfg.tmuxSession }
+  return {
+    rcId,
+    name: appName,
+    windowName: winName,
+    windowId,
+    dir: target,
+    session: cfg.tmuxSession,
+  }
 }
