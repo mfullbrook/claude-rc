@@ -32,6 +32,22 @@ function sanitizeWindowName(name) {
   return name.replace(/[ .:]/g, '_')
 }
 
+// De-duplicate within the host session, bumping the app name and the window
+// name together (e.g. "build" -> "build-2" / "build_2"). Pure + unit-testable.
+export function dedupeWindowName(taken, name) {
+  const set = taken instanceof Set ? taken : new Set(taken)
+  const base = sanitizeWindowName(name)
+  let appName = name
+  let winName = base
+  let i = 2
+  while (set.has(winName)) {
+    appName = `${name}-${i}`
+    winName = `${base}_${i}`
+    i += 1
+  }
+  return { appName, winName }
+}
+
 // A reliable PATH for the spawned window: a new tmux window inherits the tmux
 // server's env (not ours), which is unreliable when the server was first
 // started from a bare ssh command. Seed it with stable locations plus whatever
@@ -59,17 +75,8 @@ export async function launchSession({ name, dir, dryRun = false } = {}) {
   const target = resolveDir(dir, cfg.defaultDir)
   await ensureSession(cfg.tmuxSession, HOME)
 
-  // De-duplicate within the host session, bumping app + window names together
-  // (e.g. "build" -> "build-2" / "build_2").
   const taken = new Set((await listWindows(cfg.tmuxSession)).map((w) => w.windowName))
-  let appName = name
-  let winName = sanitizeWindowName(name)
-  let i = 2
-  while (taken.has(winName)) {
-    appName = `${name}-${i}`
-    winName = `${sanitizeWindowName(name)}_${i}`
-    i += 1
-  }
+  const { appName, winName } = dedupeWindowName(taken, name)
 
   const rcId = randomUUID()
   const shell = process.env.SHELL || '/bin/bash'

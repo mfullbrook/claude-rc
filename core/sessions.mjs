@@ -2,18 +2,13 @@
 //   - tmux windows  -> authoritative for "what is alive" (and running/idle)
 //   - state records -> enrichment written by the launcher + the Claude hook
 // They are joined on the rcId stamped onto each window as a user-option.
-
 import { loadConfig } from './config.mjs'
-import { readAllSessionRecords, writeSessionRecord } from './state.mjs'
+import { readAllSessionRecords, removeSessionRecord, writeSessionRecord } from './state.mjs'
 import { killWindow, listWindows } from './tmux.mjs'
 
-export async function listSessions() {
-  const cfg = loadConfig()
-  const [windows, records] = await Promise.all([
-    listWindows(cfg.tmuxSession),
-    readAllSessionRecords(),
-  ])
-
+// Pure join of live tmux windows with their enrichment records (no I/O, so it's
+// unit-testable). Returns the panel-facing session list, most-recent first.
+export function joinSessions(windows, records) {
   const sessions = windows.map((w) => {
     const rec = (w.rcId && records[w.rcId]) || null
     return {
@@ -47,7 +42,16 @@ export async function listSessions() {
     return bv - av
   })
 
-  return { sessions }
+  return sessions
+}
+
+export async function listSessions() {
+  const cfg = loadConfig()
+  const [windows, records] = await Promise.all([
+    listWindows(cfg.tmuxSession),
+    readAllSessionRecords(),
+  ])
+  return { sessions: joinSessions(windows, records) }
 }
 
 // Find the rcId for a live window, if it carries one.
@@ -60,11 +64,11 @@ export async function rcIdForWindow(windowId) {
 export async function killSession(windowId) {
   const rcId = await rcIdForWindow(windowId)
   await killWindow(windowId)
+  // The window is gone, so its record is now orphaned and invisible to the
+  // panel (which lists live windows). Delete it rather than leaving dead files
+  // that every /api/sessions call and every SSE poll re-reads forever.
   if (rcId) {
-    await writeSessionRecord(rcId, {
-      status: 'ended',
-      endedAt: Math.floor(Date.now() / 1000),
-    }).catch(() => {})
+    await removeSessionRecord(rcId).catch(() => {})
   }
   return { rcId }
 }
