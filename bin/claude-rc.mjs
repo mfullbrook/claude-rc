@@ -17,6 +17,7 @@ const COMMANDS = {
   serve: 'serve',
   setup: 'setup',
   expose: 'expose',
+  qr: 'qr',
   status: 'status',
   logs: 'logs',
   restart: 'restart',

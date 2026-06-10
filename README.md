@@ -81,11 +81,14 @@ Then open the panel (the URL from `setup`/`status`) and add it to your phone's H
 
 ```bash
 claude-rc expose          # tailscale serve --set-path /rc  (tailnet-only, never public)
+claude-rc qr              # print a QR — scan it to authorise + open the panel on your phone
 ```
 
 This serves the panel at `https://<your-host>.<tailnet>.ts.net/rc`, reachable only by your own
 Tailscale devices. claude-rc **never** uses `tailscale funnel` (which would publish it to the
-internet).
+internet). `expose` prints a QR code; scanning it on your phone opens the panel and authorises
+the device in one step (the QR encodes the one-time token link). Reprint it anytime with
+`claude-rc qr`.
 
 ## Configuration
 

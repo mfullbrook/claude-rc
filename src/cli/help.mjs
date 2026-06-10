@@ -15,6 +15,7 @@ ${bold('Server / service')}
   serve                       Run the web panel server in the foreground
   setup [--no-hooks]          Install the always-on service + Claude Code hooks
   expose                      Expose the panel on your tailnet (tailscale serve)
+  qr                          Print a QR to open the panel on your phone
   status                      Show service status
   logs                        Tail service logs
   restart                     Restart the service

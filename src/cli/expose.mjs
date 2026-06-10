@@ -1,8 +1,11 @@
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { loadConfig } from '../../core/config.mjs'
+import { buildBootstrapUrl } from '../../core/url.mjs'
 import { writeStore } from './configstore.mjs'
 import { restartService } from './platform.mjs'
+import { printQR } from './qr.mjs'
+import { tailnetDns } from './tailscale.mjs'
 import { bold, dim, fail, green, which, yellow } from './util.mjs'
 
 const pexec = promisify(execFile)
@@ -41,11 +44,12 @@ export async function run(args) {
   console.log(
     `${green('✓')} exposed on your tailnet at ${bold(mount)} ${dim('(tailnet-only, not public)')}`,
   )
-  try {
-    const s = await pexec('tailscale', ['status', '--json'])
-    const dns = JSON.parse(s.stdout)?.Self?.DNSName?.replace(/\.$/, '')
-    if (dns) console.log(`  → https://${dns}${mount}`)
-  } catch {
-    // best-effort URL print
+  const dns = await tailnetDns()
+  if (dns) {
+    const url = buildBootstrapUrl({ scheme: 'https', host: dns, baseUrl: mount, token: cfg.token })
+    console.log(dim('Scan on your phone to authorise + open the panel:'))
+    printQR(url)
+  } else {
+    console.log(dim(`  open https://<your-tailnet-host>${mount}/?token=<token> on your phone`))
   }
 }

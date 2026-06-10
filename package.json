@@ -34,5 +34,8 @@
     "@nuxt/ui": "^4.8.2",
     "nuxt": "^4.4.8",
     "vitest": "^4.1.8"
+  },
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0"
   }
 }

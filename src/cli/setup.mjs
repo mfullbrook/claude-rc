@@ -74,5 +74,6 @@ export async function run(args) {
   console.log(`  • Open once to authorise this browser:`)
   console.log(`      ${dim(`http://${cfg.bind}:${cfg.port}${boot}`)}`)
   console.log(`  • Expose on your tailnet:  ${dim('claude-rc expose')}   ${dim('# tailnet-only')}`)
+  console.log(`  • Phone QR (after expose): ${dim('claude-rc qr')}`)
   console.log(`  • Launch a session:        ${dim('claude-rc new my-feature ~/projects/app')}`)
 }
