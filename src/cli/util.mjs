@@ -1,5 +1,15 @@
 // Tiny terminal helpers — no dependencies. Colour only when stdout is a TTY.
 import process from 'node:process'
+import path from 'node:path'
+import { existsSync } from 'node:fs'
+
+// Minimal cross-platform `which`: first match on PATH.
+export function which(bin) {
+  for (const dir of (process.env.PATH || '').split(path.delimiter)) {
+    if (dir && existsSync(path.join(dir, bin))) return path.join(dir, bin)
+  }
+  return null
+}
 
 const useColor = Boolean(process.stdout.isTTY) && !process.env.NO_COLOR
 

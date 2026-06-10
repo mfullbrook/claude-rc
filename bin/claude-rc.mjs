@@ -19,6 +19,7 @@ const COMMANDS = {
   expose: 'expose',
   status: 'status',
   logs: 'logs',
+  restart: 'restart',
   uninstall: 'uninstall',
 }
 

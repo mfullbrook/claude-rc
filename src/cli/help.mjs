@@ -17,6 +17,7 @@ ${bold('Server / service')}
   expose                      Expose the panel on your tailnet (tailscale serve)
   status                      Show service status
   logs                        Tail service logs
+  restart                     Restart the service
   uninstall                   Remove the service + hooks
 
 ${bold('Other')}

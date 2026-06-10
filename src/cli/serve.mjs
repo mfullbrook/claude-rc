@@ -27,6 +27,9 @@ export async function run() {
     CLAUDE_RC_STATE_DIR: cfg.stateDir,
     CLAUDE_RC_TOKEN: cfg.token,
     CLAUDE_RC_BASE_URL: cfg.baseUrl,
+    // Runtime override so the panel + its assets mount under the configured
+    // base path (e.g. /rc) without a rebuild.
+    NUXT_APP_BASE_URL: cfg.baseUrl,
   }
 
   console.log(dim(`claude-rc serve → http://${cfg.bind}:${cfg.port}  (tmux '${cfg.tmuxSession}')`))
