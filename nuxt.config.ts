@@ -1,4 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'node:url'
+
+const coreDir = fileURLToPath(new URL('./core', import.meta.url))
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   modules: ['@nuxt/ui'],
@@ -21,5 +25,9 @@ export default defineNuxtConfig({
   nitro: {
     // Single self-contained Node server output, run by `claude-rc serve`.
     preset: 'node-server',
+    // Dev externalizes ../../core/*.mjs with wrong relative depth; inline instead.
+    externals: {
+      inline: [coreDir],
+    },
   },
 })
