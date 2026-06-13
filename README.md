@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/hero.png" alt="claude-rc" width="440">
+</p>
+
 # claude-rc
 
 **Start Claude Code sessions on your always-on machines and drive them from your phone — through Claude's own app, not a flaky bot, a browser terminal, or an SSH session.**

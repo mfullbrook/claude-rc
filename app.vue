@@ -37,8 +37,9 @@ useHead({
   title: appTitle,
   link: [
     { rel: 'manifest', href: api('/manifest.webmanifest') },
-    { rel: 'icon', type: 'image/svg+xml', href: api('/icon.svg') },
-    { rel: 'apple-touch-icon', href: api('/icon.svg') },
+    { rel: 'icon', type: 'image/png', sizes: '32x32', href: api('/favicon-32.png') },
+    { rel: 'icon', type: 'image/png', sizes: '16x16', href: api('/favicon-16.png') },
+    { rel: 'apple-touch-icon', href: api('/apple-touch-icon.png') },
   ],
   meta: [
     { name: 'theme-color', content: '#D97757' },
