@@ -253,12 +253,8 @@ const liveLabel = computed(() =>
       <div class="mx-auto max-w-2xl px-4 pb-16 pt-6">
         <!-- header -->
         <header class="mb-1 flex items-center gap-3">
-          <div
-            class="flex size-7 flex-none items-center justify-center rounded-lg bg-primary font-mono text-sm font-bold text-inverted"
-          >
-            rc
-          </div>
-          <h1 class="text-lg font-semibold tracking-tight">Remote Sessions</h1>
+          <img :src="api('/icon-512.png')" alt="claude-rc" class="size-9 flex-none rounded-lg" />
+          <h1 class="font-mono text-lg font-semibold tracking-tight">claude-rc</h1>
           <span
             v-if="status !== 'unauthorized'"
             class="ml-auto inline-flex items-center gap-1.5 text-xs text-muted"
@@ -271,10 +267,10 @@ const liveLabel = computed(() =>
             {{ liveLabel }}
           </span>
         </header>
-        <p class="mb-6 text-sm text-muted">
-          Claude Code Remote Control on
+        <p class="mb-6 mt-1.5 text-sm text-muted">
+          Remote-control your Claude Code sessions on
           <code class="text-xs">{{ requestURL.host }}</code>
-          · open a session in the Claude app’s Code tab
+          — they open in the Claude app’s Code tab.
         </p>
 
         <!-- unauthorized: the cookie lapsed or this device never signed in -->
