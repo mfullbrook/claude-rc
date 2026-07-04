@@ -15,7 +15,15 @@ function shellQuote(value) {
 
 function resolveDir(input, fallback) {
   let dir = (input && String(input).trim()) || fallback
-  if (dir === '~' || dir.startsWith('~/')) dir = path.join(HOME, dir.slice(1))
+  if (dir === '~' || dir.startsWith('~/')) {
+    dir = path.join(HOME, dir.slice(1))
+  } else if (!path.isAbsolute(dir)) {
+    // A bare relative dir ("projects/app") anchors to $HOME, not the server's
+    // process.cwd() — which is $HOME under systemd but `/` under a macOS launchd
+    // agent, so the same input resolved differently across machines. Anchoring
+    // to $HOME makes "projects/app" mean ~/projects/app on every platform.
+    dir = path.join(HOME, dir)
+  }
   dir = path.resolve(dir)
   let st
   try {

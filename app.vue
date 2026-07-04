@@ -56,6 +56,16 @@ const connected = ref(false)
 const name = ref('')
 const dir = ref('')
 const busy = ref(false)
+const tokenInput = ref('')
+
+// Authorise this device by loading the panel with a correct ?token=. The server
+// middleware sets a SameSite=Strict cookie for any page carrying a valid token,
+// so a full navigation (not a fetch) is what actually persists the session.
+function submitToken() {
+  const t = tokenInput.value.trim()
+  if (!t) return
+  window.location.href = `${base}/?token=${encodeURIComponent(t)}`
+}
 
 let es: EventSource | null = null
 
@@ -248,7 +258,7 @@ const liveLabel = computed(() =>
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="{ position: 'top-center' }">
     <div class="min-h-screen bg-default text-default">
       <div class="mx-auto max-w-2xl px-4 pb-16 pt-6">
         <!-- header -->
@@ -280,17 +290,30 @@ const liveLabel = computed(() =>
         >
           <h2 class="text-sm font-semibold">Authorise this device</h2>
           <p class="mt-2 text-sm text-muted">
-            This browser isn’t signed in (its token is missing or expired). Open the panel using
-            the one-time link from the host:
+            This browser isn’t signed in (its token is missing or expired). Paste your access
+            token to authorise this device:
           </p>
-          <ul class="mt-3 space-y-1 text-sm text-muted">
-            <li>• scan the QR from <code class="text-xs">claude-rc qr</code>, or</li>
-            <li>• open the URL printed by <code class="text-xs">claude-rc status</code></li>
-          </ul>
-          <p class="mt-3 text-xs text-dimmed">
-            The link sets a token cookie for this device. Bookmarks then work until it expires.
+          <form class="mt-3 flex flex-wrap items-end gap-2" @submit.prevent="submitToken">
+            <div class="flex min-w-44 flex-1 flex-col gap-1">
+              <label class="text-xs text-muted" for="token">Access token</label>
+              <UInput
+                id="token"
+                v-model="tokenInput"
+                type="password"
+                placeholder="paste token"
+                autocapitalize="off"
+                autocomplete="off"
+                autocorrect="off"
+                spellcheck="false"
+              />
+            </div>
+            <UButton type="submit" :disabled="!tokenInput.trim()" label="Authorise" />
+          </form>
+          <p class="mt-4 text-xs text-dimmed">
+            Get it from <code class="text-xs">claude-rc status</code> on the host, or scan the QR
+            from <code class="text-xs">claude-rc qr</code>. The token is saved as a cookie for
+            this device, so bookmarks then work until it expires.
           </p>
-          <UButton class="mt-4" color="neutral" variant="soft" label="Retry" @click="fetchOnce" />
         </section>
 
         <template v-else>
